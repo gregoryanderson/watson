@@ -14,7 +14,6 @@ export const startConversation = async feeling => {
   }
 
   const data = await response.json();
-  console.log(data)
   return data;
 }
 
@@ -32,7 +31,6 @@ export const postMessage = async newMessage => {
     throw Error('Dr Watson is currently down.  Please try again later.')
   }
   const data = await response.json();
-  // console.log(data)
   return data;
 }
 

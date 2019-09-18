@@ -41,9 +41,7 @@ export class WelcomeModal extends Component {
     try {
       //apicalls: line 1
       const firstMessage = await startConversation(this.state.feeling);
-      console.log(firstMessage.message)
       //app: line 19
-      // console.log('welcome', this.props)
       this.props.addMessage(firstMessage.message, false);
     } catch ({ message }) {
       //index.js of actions

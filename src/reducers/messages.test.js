@@ -14,16 +14,11 @@ describe("messages", () => {
       isUser: true
     };
 
-    let mockStore = {
-      messages: [{ message: "hi", isUser: false }]
-    };
+    let mockStore = [{ message: "hi", isUser: false }];
 
     let expected = [
       { message: "hi", isUser: false },
-      {
-        message: "Heyo",
-        isUser: true
-      }
+      { message: "Heyo", isUser: true }
     ];
 
     let result = messages(mockStore, mockAction);
@@ -32,7 +27,7 @@ describe("messages", () => {
 
   it("should clear the messages", () => {
     let mockAction = {
-      type: "CLEAR_MESSAGE"
+      type: "CLEAR_MESSAGES"
     };
 
     let mockStore = [{ message: "hi", isUser: false }];
@@ -43,4 +38,3 @@ describe("messages", () => {
     expect(result).toEqual(expected);
   });
 });
-

@@ -1,7 +1,9 @@
 import {
     createUser,
     clearMessages,
-    addMessage
+    addMessage,
+    hasErrored,
+    removeUser
 } from './index'
 
 describe("Actions", () => {
@@ -40,5 +42,23 @@ describe("Actions", () => {
       };
   
       expect(addMessage(mockMessage, mockUser)).toEqual(expectedAction);
+    });
+
+    it("should have a type of HAS_ERRORED", () => {
+      let mockMessage = 'oh no';
+      let expectedAction = {
+        type: "HAS_ERRORED",
+        errorMsg: 'oh no'
+      };
+      
+      expect(hasErrored(mockMessage)).toEqual(expectedAction);
+    });
+
+    it("should have a type of REMOVE_USER", () => {
+      let expectedAction = {
+        type: "REMOVE_USER"
+      };
+      
+      expect(removeUser()).toEqual(expectedAction);
     });
 })

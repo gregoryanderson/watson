@@ -1,18 +1,19 @@
-import React from 'react';
-import { shallow, mount } from 'enzyme';
-import { ChatBox, mapStateToProps, mapDispatchToProps } from './ChatBox';
-import { hasErrored } from '../../actions';
-import { postMessage } from '../../apiCalls';
+import React from "react";
+import { shallow, mount } from "enzyme";
+import { ChatBox, mapStateToProps, mapDispatchToProps } from "./ChatBox";
+import { hasErrored } from "../../actions";
+import { postMessage } from "../../apiCalls";
 
-jest.mock('../../apiCalls');
+jest.mock("../../apiCalls");
 
-describe('ChatBox component', () => {
-  let wrapper
+describe("ChatBox component", () => {
+  let wrapper;
   const mockHasErrored = jest.fn();
   const mockAddMessage = jest.fn();
   const mockMessages = [
     {
-      message: "Hello, I am Dr. Watson.  My understanding is that you are feeling tired.  Have you been feeling anxious this week?",
+      message:
+        "Hello, I am Dr. Watson.  My understanding is that you are feeling tired.  Have you been feeling anxious this week?",
       isUser: false
     },
     {
@@ -21,102 +22,112 @@ describe('ChatBox component', () => {
     }
   ];
 
+  //unsure but hasErrored comes from actions, not App.. mockAddMessage would come from app
   beforeEach(() => {
-    wrapper = shallow(<ChatBox
-      messages={mockMessages}
-      hasErrored={mockHasErrored}
-    />);
+    wrapper = shallow(
+      <ChatBox messages={mockMessages} hasErrored={mockHasErrored} />
+    );
   });
 
-  it('should match the snapshot rendering all messages', () => {
+  it("should match the snapshot rendering all messages", () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('should match the snapshot rendering an error if there is an errorMsg in the store', () => {
-    wrapper = shallow(<ChatBox
-      messages={mockMessages}
-      errorMsg={'fetch failed.'}
-      hasErrored={mockHasErrored}
-    />);
+  //error message comes from storeprops
+  it("should match the snapshot rendering an error if there is an errorMsg in the store", () => {
+    wrapper = shallow(
+      <ChatBox
+        messages={mockMessages}
+        errorMsg={"fetch failed."}
+        hasErrored={mockHasErrored}
+      />
+    );
 
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('should update the state when handleChange is called', () => {
-    wrapper = mount(<ChatBox
-      messages={mockMessages}
-      hasErrored={mockHasErrored}
-    />);
+  //component state
+  it("should update the state when handleChange is called", () => {
+    wrapper = mount(
+      <ChatBox messages={mockMessages} hasErrored={mockHasErrored} />
+    );
 
-    wrapper.instance().handleChange({ target: { value: 'Hello world' } });
+    wrapper.instance().handleChange({ target: { value: "Hello world" } });
 
-    expect(wrapper.state('message')).toEqual('Hello world');
+    expect(wrapper.state("message")).toEqual("Hello world");
   });
 
-  it('should call messageChatBot, and clear state when calling handleSubmit pressing Enter', () => {
-    wrapper = mount(<ChatBox
-      addMessage={mockAddMessage}
-      messages={mockMessages}
-      hasErrored={mockHasErrored}
-    />);
+  //functionality is missing here, but tests pass
+  it("should call messageChatBot, and clear state when calling handleSubmit pressing Enter", () => {
+    wrapper = mount(
+      <ChatBox
+        addMessage={mockAddMessage}
+        messages={mockMessages}
+        hasErrored={mockHasErrored}
+      />
+    );
     wrapper.instance().messageChatBot = jest.fn();
 
-    wrapper.setState({ message: 'Hello world' });
-    wrapper.instance().handleSubmit({ key: 'Enter' });
+    wrapper.setState({ message: "Hello world" });
+    wrapper.instance().handleSubmit({ key: "Enter" });
 
-    expect(wrapper.state('message')).toEqual('');
+    expect(wrapper.state("message")).toEqual("");
     expect(wrapper.instance().messageChatBot).toHaveBeenCalled();
   });
 
-  it('should call addMessage, messageChatBot, and clear state when calling handleSubmit clicking the button', () => {
-    wrapper = mount(<ChatBox
-      addMessage={mockAddMessage}
-      messages={mockMessages}
-      hasErrored={mockHasErrored}
-    />);
+  it("should call addMessage, messageChatBot, and clear state when calling handleSubmit clicking the button", () => {
+    wrapper = mount(
+      <ChatBox
+        addMessage={mockAddMessage}
+        messages={mockMessages}
+        hasErrored={mockHasErrored}
+      />
+    );
+
+    //this is how i solve my missing test problem
     wrapper.instance().messageChatBot = jest.fn();
 
-    wrapper.setState({ message: 'Hello world' });
+    wrapper.setState({ message: "Hello world" });
     wrapper.instance().handleSubmit({ button: 0 });
 
-    expect(wrapper.state('message')).toEqual('');
+    expect(wrapper.state("message")).toEqual("");
     expect(wrapper.instance().messageChatBot).toHaveBeenCalled();
   });
 
-  it('should call postMessage and addMessage when calling messageChatBot', async () => {
-    wrapper = mount(<ChatBox
-      messages={mockMessages}
-      hasErrored={mockHasErrored}
-    />);
+  it("should call postMessage and addMessage when calling messageChatBot", async () => {
+    wrapper = mount(
+      <ChatBox messages={mockMessages} hasErrored={mockHasErrored} />
+    );
 
     postMessage.mockImplementation(() => {
-      return Promise.resolve({ message: 'My name is Dr. Watson.  How are you today?' });
+      return Promise.resolve({
+        message: "My name is Dr. Watson.  How are you today?"
+      });
     });
 
-    wrapper.instance().setState({ message: 'Hi there.' });
+    wrapper.instance().setState({ message: "Hi there." });
     await wrapper.instance().messageChatBot();
 
-    expect(postMessage).toHaveBeenCalledWith('Hi there.')
+    expect(postMessage).toHaveBeenCalledWith("Hi there.");
   });
 
-  it('should call hasErrored if messageChatBot rejects', async () => {
-    wrapper = mount(<ChatBox
-      messages={mockMessages}
-      hasErrored={mockHasErrored}
-    />);
+  it("should call hasErrored if messageChatBot rejects", async () => {
+    wrapper = mount(
+      <ChatBox messages={mockMessages} hasErrored={mockHasErrored} />
+    );
 
     postMessage.mockImplementation(() => {
-      return Promise.reject(Error('fetch failed.'));
+      return Promise.reject(Error("fetch failed."));
     });
 
     await wrapper.instance().messageChatBot();
 
-    expect(mockHasErrored).toHaveBeenCalledWith('fetch failed.')
+    expect(mockHasErrored).toHaveBeenCalledWith("fetch failed.");
   });
 });
 
-describe('mapStateToProps', () => {
-  it('should return an object with the messages and errorMsg information', () => {
+describe("mapStateToProps", () => {
+  it("should return an object with the messages and errorMsg information", () => {
     const mockUser = {
       id: 1568665187737,
       firstName: "Travis",
@@ -126,14 +137,24 @@ describe('mapStateToProps', () => {
 
     const mockState = {
       user: mockUser,
-      messages: [{
-        message: 'Hi there, my name is Dr. Watson. I understand that you have been feeling happy. That is super exciting to hear!',
-        isUser: false,
-      }],
-      errorMsg: ''
+      messages: [
+        {
+          message:
+            "Hi there, my name is Dr. Watson. I understand that you have been feeling happy. That is super exciting to hear!",
+          isUser: false
+        }
+      ],
+      errorMsg: ""
     };
     const expected = {
-      errorMsg: ''
+      errorMsg: "",
+      messages: [
+        {
+          message:
+            "Hi there, my name is Dr. Watson. I understand that you have been feeling happy. That is super exciting to hear!",
+          isUser: false
+        }
+      ]
     };
     const mappedProps = mapStateToProps(mockState);
 
@@ -141,13 +162,13 @@ describe('mapStateToProps', () => {
   });
 });
 
-describe('mapDispatchToProps', () => {
-  it('calls dispatch with a hasErrored action when hasErrored is called', () => {
+describe("mapDispatchToProps", () => {
+  it("calls dispatch with a hasErrored action when hasErrored is called", () => {
     const mockDispatch = jest.fn();
-    const actionToDispatch = hasErrored('fetch failed');
+    const actionToDispatch = hasErrored("fetch failed");
 
     const mappedProps = mapDispatchToProps(mockDispatch);
-    mappedProps.hasErrored('fetch failed');
+    mappedProps.hasErrored("fetch failed");
 
     expect(mockDispatch).toHaveBeenCalledWith(actionToDispatch);
   });

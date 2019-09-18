@@ -1,5 +1,7 @@
 import { startConversation, postMessage, endConversation } from './apiCalls';
 
+//this will need four tests for post message
+
 describe('startConversation', () => {
   const mockFeeling = 'stressed';
   const mockResponse = {

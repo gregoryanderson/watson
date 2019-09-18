@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './Header.css'
 
+//takes two props.. actually signOut comes from App: line45, and user comes from mapState below
 export const Header = ({ user, signOut }) => {
   return (
     <header>

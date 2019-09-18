@@ -20,7 +20,6 @@ describe('Header component', () => {
 
   it('should match the snapshot with just the title if there is no user', () => {
     const wrapper = shallow(<Header user={null} signOut={mockSignOut} />);
-
     expect(wrapper).toMatchSnapshot();
   });
 

@@ -39,13 +39,12 @@ export class App extends Component {
   }
 
   render() {
-    console.log('props', this.props)
-    const { user, messages } = this.props;
+    const { user } = this.props;
     return (
       <div className="App">
         <Header signOut={this.signOut} />
-        {!user && <WelcomeModal addMessage={this.props.addMessage} />}
-        {user && <ChatBox addMessage={this.props.addMessage} messages={messages} />}
+        {!user && <WelcomeModal />}
+        {user && <ChatBox />}
       </div>
     );
   }

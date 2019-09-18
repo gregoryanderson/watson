@@ -26,6 +26,7 @@ describe('App component', () => {
     />);
   });
 
+  
   it('should match the snapshot with a ChatBox if the user has signed in', () => {
     expect(wrapper).toMatchSnapshot();
   });
@@ -40,7 +41,7 @@ describe('App component', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-
+  //clear messages to also be called
   it('should call endConversation, and removeUser if someone signs out', async () => {
     await wrapper.instance().signOut();
 
@@ -48,6 +49,7 @@ describe('App component', () => {
     expect(mockRemoveUser).toHaveBeenCalled();
   });
 
+  
   it('should call hasErrored if endCoversation does not resolve when a user signs out', async () => {
     endConversation.mockImplementation(() => {
       return Promise.reject(Error('fetch failed.'));
@@ -77,7 +79,11 @@ describe('mapStateToProps', () => {
       errorMsg: ''
     };
     const expected = {
-      user: mockUser
+      user: mockUser,
+      messages: [{
+        message: 'Hi there, my name is Dr. Watson. I understand that you have been feeling happy. That is super exciting to hear!',
+        isUser: false,
+      }],
     }
 
     const mappedProps = mapStateToProps(mockState);

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { createUser, hasErrored } from "../../actions";
+import { createUser, hasErrored, addMessage } from "../../actions";
 import { startConversation } from "../../apiCalls";
 import "./WelcomeModal.css";
 
@@ -41,7 +41,9 @@ export class WelcomeModal extends Component {
     try {
       //apicalls: line 1
       const firstMessage = await startConversation(this.state.feeling);
+      console.log(firstMessage.message)
       //app: line 19
+      // console.log('welcome', this.props)
       this.props.addMessage(firstMessage.message, false);
     } catch ({ message }) {
       //index.js of actions
@@ -51,10 +53,6 @@ export class WelcomeModal extends Component {
 
   render() {
     const { firstName, lastName, feeling, error } = this.state;
-    //line 50: if there is no name.. the bot breaks
-    //line 72: if there is no feeling the bot breaks.. actually it works
-
-    //line80: handleSubmit
     return (
       <form className="welcome-modal">
         <legend>Welcome to Survey Bot! Please enter your name.</legend>
@@ -88,10 +86,15 @@ export class WelcomeModal extends Component {
   }
 }
 
+export const mapStateToProps = ({ user, messages }) => ({
+  user,
+  messages
+});
+
 export const mapDispatchToProps = dispatch =>
-  bindActionCreators({ createUser, hasErrored }, dispatch);
+  bindActionCreators({ createUser, hasErrored, addMessage }, dispatch);
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(WelcomeModal);

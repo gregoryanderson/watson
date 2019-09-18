@@ -21,6 +21,8 @@ describe('ChatBox component', () => {
     }
   ];
 
+
+  //unsure but hasErrored comes from actions, not App.. mockAddMessage would come from app
   beforeEach(() => {
     wrapper = shallow(<ChatBox
       messages={mockMessages}
@@ -32,6 +34,7 @@ describe('ChatBox component', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
+  //error message comes from storeprops
   it('should match the snapshot rendering an error if there is an errorMsg in the store', () => {
     wrapper = shallow(<ChatBox
       messages={mockMessages}
@@ -42,6 +45,7 @@ describe('ChatBox component', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
+  //component state
   it('should update the state when handleChange is called', () => {
     wrapper = mount(<ChatBox
       messages={mockMessages}
@@ -53,6 +57,7 @@ describe('ChatBox component', () => {
     expect(wrapper.state('message')).toEqual('Hello world');
   });
 
+  //functionality is missing here, but tests pass
   it('should call messageChatBot, and clear state when calling handleSubmit pressing Enter', () => {
     wrapper = mount(<ChatBox
       addMessage={mockAddMessage}
@@ -74,6 +79,8 @@ describe('ChatBox component', () => {
       messages={mockMessages}
       hasErrored={mockHasErrored}
     />);
+
+    //this is how i solve my missing test problem
     wrapper.instance().messageChatBot = jest.fn();
 
     wrapper.setState({ message: 'Hello world' });
@@ -133,7 +140,11 @@ describe('mapStateToProps', () => {
       errorMsg: ''
     };
     const expected = {
-      errorMsg: ''
+      errorMsg: '',
+      messages: [{
+        message: 'Hi there, my name is Dr. Watson. I understand that you have been feeling happy. That is super exciting to hear!',
+        isUser: false,
+      }],
     };
     const mappedProps = mapStateToProps(mockState);
 
